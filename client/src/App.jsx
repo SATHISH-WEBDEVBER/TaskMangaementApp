@@ -18,7 +18,7 @@ function App() {
   
   // Notification & Modal States
   const [notification, setNotification] = useState(null);
-  const [taskToDelete, setTaskToDelete] = useState(null); // <--- New State for Delete Modal
+  const [taskToDelete, setTaskToDelete] = useState(null); 
 
   // --- HELPER: SHOW NOTIFICATION ---
   const showNotification = (message) => {
@@ -74,19 +74,17 @@ function App() {
     } catch (error) { console.error(error); }
   };
 
-  // --- NEW DELETE LOGIC (NO POPUP) ---
-  // 1. Open the custom modal
+  // --- DELETE LOGIC ---
   const promptDelete = (id) => {
     setTaskToDelete(id);
   };
 
-  // 2. Actually delete after user clicks "Yes" in modal
   const confirmDelete = async () => {
     if (!taskToDelete) return;
     try {
       await axios.delete(`${API_URL}/${taskToDelete}`);
       setTasks(tasks.filter(t => t._id !== taskToDelete));
-      setTaskToDelete(null); // Close modal
+      setTaskToDelete(null); 
       showNotification("Task deleted");
     } catch (error) { console.error(error); }
   };
@@ -102,22 +100,22 @@ function App() {
   const pendingTasks = tasks.filter(t => !t.isCompleted);
   const completedTasks = tasks.filter(t => t.isCompleted);
 
-  // --- LOGIN SCREEN ---
+  // --- LOGIN SCREEN (RESPONSIVE) ---
   if (!isAuthenticated) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-indigo-900 via-purple-900 to-black flex items-center justify-center p-4">
-        <div className="bg-white/10 backdrop-blur-xl p-8 rounded-3xl border border-white/20 w-full max-w-sm shadow-2xl">
-          <h1 className="text-3xl font-bold text-white text-center mb-2">My Space</h1>
+        <div className="bg-white/10 backdrop-blur-xl p-6 sm:p-8 rounded-3xl border border-white/20 w-full max-w-sm shadow-2xl mx-4">
+          <h1 className="text-2xl sm:text-3xl font-bold text-white text-center mb-2">My Space</h1>
           <form onSubmit={handleLogin} className="space-y-4 mt-6">
             <input 
               type="password" 
-              className="w-full px-4 py-3 rounded-xl bg-black/40 border border-white/10 text-white placeholder-white/30 text-center tracking-widest text-xl focus:outline-none focus:border-purple-400 transition"
+              className="w-full px-4 py-3 rounded-xl bg-black/40 border border-white/10 text-white placeholder-white/30 text-center tracking-widest text-lg sm:text-xl focus:outline-none focus:border-purple-400 transition"
               value={passwordInput}
               onChange={e => setPasswordInput(e.target.value)}
               placeholder="Passcode"
               autoFocus
             />
-            <button className="w-full bg-gradient-to-r from-purple-500 to-pink-500 text-white font-bold py-3 rounded-xl hover:opacity-90 transition">
+            <button className="w-full bg-gradient-to-r from-purple-500 to-pink-500 text-white font-bold py-3 rounded-xl hover:opacity-90 transition shadow-lg">
               Enter
             </button>
           </form>
@@ -126,14 +124,14 @@ function App() {
     );
   }
 
-  // --- MAIN DASHBOARD ---
+  // --- MAIN DASHBOARD (RESPONSIVE) ---
   return (
     <div className="min-h-screen bg-gradient-to-br from-indigo-800 via-purple-700 to-teal-700 text-white font-sans selection:bg-pink-500 relative overflow-x-hidden">
       
-      {/* 1. CUSTOM DELETE MODAL (REPLACES BROWSER POPUP) */}
+      {/* 1. CUSTOM DELETE MODAL (RESPONSIVE SIZE) */}
       {taskToDelete && (
         <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-in fade-in duration-200">
-          <div className="bg-gray-900/90 border border-white/10 p-6 rounded-3xl shadow-2xl max-w-sm w-full text-center transform scale-100 transition-all">
+          <div className="bg-gray-900/95 border border-white/10 p-6 rounded-3xl shadow-2xl w-[90%] max-w-sm text-center transform scale-100 transition-all">
             <div className="w-12 h-12 bg-red-500/20 rounded-full flex items-center justify-center mx-auto mb-4 text-red-400">
               <AlertTriangle size={24} />
             </div>
@@ -142,13 +140,13 @@ function App() {
             <div className="flex gap-3 justify-center">
               <button
                 onClick={() => setTaskToDelete(null)}
-                className="px-6 py-3 rounded-xl bg-white/5 text-white hover:bg-white/10 transition font-medium w-full"
+                className="px-4 py-3 rounded-xl bg-white/5 text-white hover:bg-white/10 transition font-medium w-full text-sm sm:text-base"
               >
                 Cancel
               </button>
               <button
                 onClick={confirmDelete}
-                className="px-6 py-3 rounded-xl bg-red-500 text-white hover:bg-red-600 transition font-bold shadow-lg shadow-red-500/30 w-full"
+                className="px-4 py-3 rounded-xl bg-red-500 text-white hover:bg-red-600 transition font-bold shadow-lg shadow-red-500/30 w-full text-sm sm:text-base"
               >
                 Delete
               </button>
@@ -159,18 +157,18 @@ function App() {
 
       {/* 2. SUCCESS NOTIFICATION */}
       {notification && (
-        <div className="fixed top-5 left-1/2 transform -translate-x-1/2 z-40 animate-bounce">
-          <div className="bg-green-500 text-white px-6 py-3 rounded-full shadow-2xl font-bold flex items-center gap-2 border-2 border-white/20">
-            <Check size={20} />
-            {notification}
+        <div className="fixed top-5 left-1/2 transform -translate-x-1/2 z-40 animate-bounce w-[90%] sm:w-auto text-center">
+          <div className="bg-green-500 text-white px-4 py-3 rounded-full shadow-2xl font-bold flex items-center justify-center gap-2 border-2 border-white/20 text-sm sm:text-base">
+            <Check size={18} />
+            <span className="truncate">{notification}</span>
           </div>
         </div>
       )}
 
-      {/* Header */}
-      <div className="max-w-4xl mx-auto p-6 flex flex-col sm:flex-row justify-between items-center gap-4">
-        <h1 className="text-3xl font-extrabold tracking-tight">Today's Tasks</h1>
-        <div className="flex items-center gap-3">
+      {/* Header (Responsive Layout) */}
+      <div className="max-w-4xl mx-auto p-4 sm:p-6 flex flex-col sm:flex-row justify-between items-center gap-4">
+        <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight">Today's Tasks</h1>
+        <div className="flex items-center gap-3 w-full sm:w-auto justify-center sm:justify-end">
           <div className="bg-white/10 backdrop-blur-md px-4 py-2 rounded-full border border-white/20 flex items-center gap-2 shadow-lg">
             <Calendar size={16} className="text-pink-300" />
             <input 
@@ -186,79 +184,83 @@ function App() {
         </div>
       </div>
 
-      <div className="max-w-4xl mx-auto px-6 pb-20">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 pb-20">
         
-        {/* Input Bar */}
-        <form onSubmit={addTask} className="relative mb-10 group z-10">
+        {/* Input Bar (Responsive) */}
+        <form onSubmit={addTask} className="relative mb-8 sm:mb-10 group z-10">
           <input
             type="text"
             placeholder="Add a new task..."
-            className="w-full pl-6 pr-16 py-5 bg-white/10 backdrop-blur-xl rounded-2xl border border-white/20 text-white placeholder-white/40 shadow-xl focus:bg-white/20 focus:scale-[1.01] outline-none transition-all duration-300 text-lg"
+            className="w-full pl-5 pr-14 sm:pl-6 sm:pr-16 py-4 sm:py-5 bg-white/10 backdrop-blur-xl rounded-2xl border border-white/20 text-white placeholder-white/40 shadow-xl focus:bg-white/20 focus:scale-[1.01] outline-none transition-all duration-300 text-base sm:text-lg"
             value={newTaskTitle}
             onChange={e => setNewTaskTitle(e.target.value)}
           />
           <button 
             type="submit"
-            className="absolute right-3 top-3 bottom-3 bg-gradient-to-r from-pink-500 to-purple-500 w-12 rounded-xl flex items-center justify-center hover:shadow-lg hover:shadow-purple-500/50 transition transform hover:scale-105 active:scale-95"
+            className="absolute right-2 top-2 bottom-2 bg-gradient-to-r from-pink-500 to-purple-500 w-10 sm:w-12 rounded-xl flex items-center justify-center hover:shadow-lg hover:shadow-purple-500/50 transition transform hover:scale-105 active:scale-95"
           >
-            <Plus size={24} className="text-white" />
+            <Plus size={20} className="text-white" />
           </button>
         </form>
 
-        {/* --- PENDING TASKS GRID --- */}
-        <div className="grid grid-cols-2 md:grid-cols-3 gap-6 mb-12">
+        {/* --- PENDING TASKS GRID (Responsive 2-col to 3-col) --- */}
+        <div className="grid grid-cols-2 md:grid-cols-3 gap-3 sm:gap-6 mb-12">
           {pendingTasks.map((task, index) => (
             <div 
               key={task._id} 
               style={{ animationDelay: `${index * 0.5}s` }}
-              className="animate-float aspect-square bg-white/10 backdrop-blur-lg rounded-3xl border border-white/20 p-5 flex flex-col justify-between shadow-2xl hover:shadow-pink-500/20 hover:border-pink-300/50 transition-all duration-300 group"
+              className="animate-float aspect-square bg-white/10 backdrop-blur-lg rounded-2xl sm:rounded-3xl border border-white/20 p-3 sm:p-5 flex flex-col justify-between shadow-2xl hover:shadow-pink-500/20 hover:border-pink-300/50 transition-all duration-300 group"
             >
-              <div className="flex justify-between items-start opacity-50 group-hover:opacity-100 transition">
+              {/* Card Header */}
+              <div className="flex justify-between items-start opacity-60 sm:opacity-50 group-hover:opacity-100 transition">
                 <button 
                   onClick={() => toggleComplete(task)}
-                  className="w-8 h-8 rounded-full border-2 border-white/30 hover:border-green-400 hover:bg-green-400/20 transition flex items-center justify-center"
+                  className="w-6 h-6 sm:w-8 sm:h-8 rounded-full border-2 border-white/30 hover:border-green-400 hover:bg-green-400/20 transition flex items-center justify-center"
                   title="Mark as Complete"
                 >
-                  <Check size={14} className="text-transparent hover:text-green-400" />
+                  <Check size={12} className="text-transparent hover:text-green-400 sm:w-[14px] sm:h-[14px]" />
                 </button>
                 <button 
                   onClick={() => promptDelete(task._id)}
                   className="text-white/30 hover:text-red-400 transition"
                 >
-                  <Trash2 size={16} />
+                  <Trash2 size={16} className="sm:w-[18px] sm:h-[18px]" />
                 </button>
               </div>
 
-              <div className="flex-1 flex items-center justify-center text-center overflow-hidden py-2">
+              {/* Card Body */}
+              <div className="flex-1 flex items-center justify-center text-center overflow-hidden py-1 sm:py-2">
                  {editingId === task._id ? (
                   <textarea 
                     autoFocus
                     value={editTitle} 
                     onChange={e => setEditTitle(e.target.value)}
                     onBlur={() => saveEdit(task._id)}
-                    className="w-full h-full bg-transparent text-white text-center resize-none outline-none border-b border-pink-500"
+                    className="w-full h-full bg-transparent text-white text-center resize-none outline-none border-b border-pink-500 text-sm sm:text-base"
                   />
                 ) : (
                   <h3 
                     onClick={() => { setEditingId(task._id); setEditTitle(task.title); }}
-                    className="text-lg sm:text-xl font-bold text-white drop-shadow-md break-words cursor-pointer select-none"
+                    className="text-sm sm:text-xl font-bold text-white drop-shadow-md break-words cursor-pointer select-none line-clamp-3 leading-tight"
                   >
                     {task.title}
                   </h3>
                 )}
               </div>
               
+              {/* Card Footer */}
               <div className="text-center">
-                 <span className="text-xs text-white/40 font-semibold bg-black/20 px-3 py-1 rounded-full">
+                 <span className="text-[10px] sm:text-xs text-white/40 font-semibold bg-black/20 px-2 py-1 rounded-full">
                     Pending
                  </span>
               </div>
             </div>
           ))}
 
+          {/* Empty State */}
           {pendingTasks.length === 0 && (
-            <div className="aspect-square border-2 border-dashed border-white/10 rounded-3xl flex items-center justify-center text-white/20">
-              <p>No tasks yet</p>
+            <div className="aspect-square border-2 border-dashed border-white/10 rounded-2xl sm:rounded-3xl flex items-center justify-center text-white/20">
+              <p className="text-sm sm:text-base">No tasks yet</p>
             </div>
           )}
         </div>
@@ -266,38 +268,38 @@ function App() {
         {/* --- COMPLETED TASKS GRID --- */}
         {completedTasks.length > 0 && (
           <div className="border-t border-white/10 pt-8">
-            <h3 className="text-white/50 uppercase tracking-widest text-sm mb-6 font-bold">Completed Tasks</h3>
+            <h3 className="text-white/50 uppercase tracking-widest text-xs sm:text-sm mb-6 font-bold text-center sm:text-left">Completed Tasks</h3>
             
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-6">
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-3 sm:gap-6">
               {completedTasks.map((task) => (
                 <div 
                   key={task._id} 
-                  className="aspect-square bg-black/20 backdrop-blur-sm rounded-3xl border border-white/5 p-5 flex flex-col justify-between shadow-inner opacity-80 hover:opacity-100 transition duration-300"
+                  className="aspect-square bg-black/20 backdrop-blur-sm rounded-2xl sm:rounded-3xl border border-white/5 p-3 sm:p-5 flex flex-col justify-between shadow-inner opacity-80 hover:opacity-100 transition duration-300"
                 >
                   <div className="flex justify-between items-start">
                     <button 
                       onClick={() => toggleComplete(task)}
-                      className="w-8 h-8 rounded-full bg-green-500 text-white shadow-lg shadow-green-500/40 flex items-center justify-center transition hover:scale-110"
+                      className="w-6 h-6 sm:w-8 sm:h-8 rounded-full bg-green-500 text-white shadow-lg shadow-green-500/40 flex items-center justify-center transition hover:scale-110"
                       title="Mark as Incomplete"
                     >
-                      <Check size={18} strokeWidth={3} />
+                      <Check size={14} strokeWidth={3} className="sm:w-[18px] sm:h-[18px]" />
                     </button>
                     <button 
                       onClick={() => promptDelete(task._id)}
                       className="text-white/20 hover:text-red-400 transition"
                     >
-                      <X size={20} />
+                      <X size={16} className="sm:w-[20px] sm:h-[20px]" />
                     </button>
                   </div>
 
-                  <div className="flex-1 flex items-center justify-center text-center overflow-hidden py-2">
-                    <h3 className="text-lg sm:text-xl font-bold text-white/50 line-through break-words select-none">
+                  <div className="flex-1 flex items-center justify-center text-center overflow-hidden py-1 sm:py-2">
+                    <h3 className="text-sm sm:text-xl font-bold text-white/50 line-through break-words select-none line-clamp-3 leading-tight">
                       {task.title}
                     </h3>
                   </div>
 
                   <div className="text-center">
-                    <span className="text-xs text-green-400/60 font-semibold bg-green-500/10 px-3 py-1 rounded-full border border-green-500/20">
+                    <span className="text-[10px] sm:text-xs text-green-400/60 font-semibold bg-green-500/10 px-2 py-1 rounded-full border border-green-500/20">
                       Done
                     </span>
                   </div>
