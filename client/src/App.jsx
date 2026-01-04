@@ -3,8 +3,8 @@ import axios from 'axios';
 import { format } from 'date-fns';
 import { Trash2, Check, LogOut, Calendar, Plus, X, AlertTriangle } from 'lucide-react';
 
-const API_URL = "http://localhost:5000/tasks";
-const APP_PASSWORD = "1234"; 
+const API_URL = "https://taskmangaementapp.onrender.comtasks";
+const APP_PASSWORD = "MSr@1589"; 
 
 function App() {
   // --- STATES ---
