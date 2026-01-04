@@ -128,25 +128,34 @@ function App() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-indigo-800 via-purple-700 to-teal-700 text-white font-sans selection:bg-pink-500 relative overflow-x-hidden">
       
-      {/* 1. CUSTOM DELETE MODAL (RESPONSIVE SIZE) */}
+      {/* 1. CUSTOM DELETE MODAL (FIXED RESPONSIVENESS) */}
       {taskToDelete && (
-        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-in fade-in duration-200">
-          <div className="bg-gray-900/95 border border-white/10 p-6 rounded-3xl shadow-2xl w-[90%] max-w-sm text-center transform scale-100 transition-all">
+        <div className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-in fade-in duration-200">
+          {/* Modal Box */}
+          <div className="bg-gray-900/95 border border-white/10 p-5 sm:p-6 rounded-3xl shadow-2xl w-full max-w-[320px] sm:max-w-sm text-center transform scale-100 transition-all">
+            
+            {/* Icon */}
             <div className="w-12 h-12 bg-red-500/20 rounded-full flex items-center justify-center mx-auto mb-4 text-red-400">
               <AlertTriangle size={24} />
             </div>
-            <h3 className="text-xl font-bold text-white mb-2">Delete this task?</h3>
-            <p className="text-white/50 mb-6 text-sm">This action cannot be undone.</p>
-            <div className="flex gap-3 justify-center">
+            
+            {/* Text */}
+            <h3 className="text-xl font-bold text-white mb-2">Delete Task?</h3>
+            <p className="text-white/50 mb-6 text-sm px-2">
+              You are about to permanently delete this task.
+            </p>
+            
+            {/* Buttons: Stacked on very small screens, Row on normal screens */}
+            <div className="grid grid-cols-2 gap-3">
               <button
                 onClick={() => setTaskToDelete(null)}
-                className="px-4 py-3 rounded-xl bg-white/5 text-white hover:bg-white/10 transition font-medium w-full text-sm sm:text-base"
+                className="px-4 py-3 rounded-xl bg-white/5 text-white hover:bg-white/10 transition font-medium text-sm sm:text-base active:scale-95"
               >
                 Cancel
               </button>
               <button
                 onClick={confirmDelete}
-                className="px-4 py-3 rounded-xl bg-red-500 text-white hover:bg-red-600 transition font-bold shadow-lg shadow-red-500/30 w-full text-sm sm:text-base"
+                className="px-4 py-3 rounded-xl bg-red-500 text-white hover:bg-red-600 transition font-bold shadow-lg shadow-red-500/30 text-sm sm:text-base active:scale-95"
               >
                 Delete
               </button>
@@ -155,17 +164,19 @@ function App() {
         </div>
       )}
 
-      {/* 2. SUCCESS NOTIFICATION */}
+      {/* 2. SUCCESS NOTIFICATION (FIXED RESPONSIVENESS) */}
       {notification && (
-        <div className="fixed top-5 left-1/2 transform -translate-x-1/2 z-40 animate-bounce w-[90%] sm:w-auto text-center">
-          <div className="bg-green-500 text-white px-4 py-3 rounded-full shadow-2xl font-bold flex items-center justify-center gap-2 border-2 border-white/20 text-sm sm:text-base">
-            <Check size={18} />
-            <span className="truncate">{notification}</span>
+        <div className="fixed top-4 left-0 right-0 z-50 flex justify-center px-4 animate-in slide-in-from-top-5 duration-300">
+          <div className="bg-green-500 text-white px-5 py-3 rounded-2xl shadow-2xl font-bold flex items-center gap-3 border border-white/20 max-w-md w-full sm:w-auto">
+            <div className="bg-white/20 p-1 rounded-full shrink-0">
+               <Check size={16} strokeWidth={3} />
+            </div>
+            <span className="text-sm sm:text-base break-words leading-tight">{notification}</span>
           </div>
         </div>
       )}
 
-      {/* Header (Responsive Layout) */}
+      {/* Header */}
       <div className="max-w-4xl mx-auto p-4 sm:p-6 flex flex-col sm:flex-row justify-between items-center gap-4">
         <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight">Today's Tasks</h1>
         <div className="flex items-center gap-3 w-full sm:w-auto justify-center sm:justify-end">
@@ -186,7 +197,7 @@ function App() {
 
       <div className="max-w-4xl mx-auto px-4 sm:px-6 pb-20">
         
-        {/* Input Bar (Responsive) */}
+        {/* Input Bar */}
         <form onSubmit={addTask} className="relative mb-8 sm:mb-10 group z-10">
           <input
             type="text"
@@ -203,7 +214,7 @@ function App() {
           </button>
         </form>
 
-        {/* --- PENDING TASKS GRID (Responsive 2-col to 3-col) --- */}
+        {/* --- PENDING TASKS GRID --- */}
         <div className="grid grid-cols-2 md:grid-cols-3 gap-3 sm:gap-6 mb-12">
           {pendingTasks.map((task, index) => (
             <div 
